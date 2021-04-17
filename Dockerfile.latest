@@ -3,9 +3,6 @@
 # debian:10-slim/buster-slim
 FROM debian@sha256:b586cf8c850cada85a47599f08eb34ede4a7c473551fd7c68cbf20ce5f8dbbf1
 
-# args
-ARG GCLOUD_VERSION=336.0.0
-
 # install packages
 RUN apt-get update -y && \
 	apt-get upgrade -y && \
@@ -19,12 +16,6 @@ RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyri
 	apt-get install -y google-cloud-sdk && \
 	mkdir -p /.config/gcloud && \
 	chown -R 1001 /.config/gcloud
-
-# install gcloud
-RUN curl -sLO https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${GCLOUD_VERSION}-linux-x86_64.tar.gz
-RUN tar -zxf google-cloud-sdk-${GCLOUD_VERSION}-linux-x86_64.tar.gz
-RUN rm -f google-cloud-sdk-${GCLOUD_VERSION}-linux-x86_64.tar.gz
-ENV PATH=/usr/bin/google-cloud-sdk/bin:$PATH
 
 # set current dir
 WORKDIR /usr/bin

@@ -13,22 +13,36 @@ CONTAINER_NAME = gcloud-sdk
 
 ## cointaier
 
-__check-container-tag :
+__check-tag :
 	@[ "$(CONTAINER_TAG)" ] || ( echo "Missing container tag (CONTAINER_TAG), please define it and retry"; exit 1 )
 
-container-build : __check-container-tag		## Build container
-	docker build . -t $(IMAGE_NAME):$(CONTAINER_TAG)
+build :		## Build container
+	# 334.0.0
+	docker build . -f Dockerfile -t $(IMAGE_NAME):334.0.0 --build-arg GCLOUD_VERSION=334.0.0
+	# 335.0.0
+	docker build . -f Dockerfile -t $(IMAGE_NAME):335.0.0 --build-arg GCLOUD_VERSION=335.0.0
+	# 336.0.0
+	docker build . -f Dockerfile -t $(IMAGE_NAME):336.0.0 --build-arg GCLOUD_VERSION=336.0.0
+	# latest
+	docker build . -f Dockerfile.latest -t $(IMAGE_NAME):latest
 
-container-push : __check-container-tag		## Push container to container registry
-	docker push $(IMAGE_NAME):$(CONTAINER_TAG)
+push :		## Push container to container registry
+	# 334.0.0
+	docker push $(IMAGE_NAME):334.0.0
+	# 335.0.0
+	docker push $(IMAGE_NAME):335.0.0
+	# 336.0.0
+	docker push $(IMAGE_NAME):336.0.0
+	# latest
+	docker push $(IMAGE_NAME):latest
 
-container-run : __check-container-tag		## Run container
+run : __check-tag		## Run container
 	docker run -d --rm --name $(CONTAINER_NAME) $(IMAGE_NAME):$(CONTAINER_TAG)
 
-container-exec :		## Open bash in container
+exec :		## Open bash in container
 	docker exec -ti $(CONTAINER_NAME) bash
 
-container-stop :		## Stop container
+stop :		## Stop container
 	docker container stop $(CONTAINER_NAME)
 
 
